@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-
+import { NavBar, NavBarIcon, NavBarIconAnchor } from '@dfds-ui/react-components'
+import { Button } from '@dfds-ui/react-components'
+import { Close } from '@dfds-ui/icons'
 const contentful = require('contentful')
 
 
@@ -33,7 +34,18 @@ const App: React.FC = () => {
   client.getAsset("5qUgeLjfMgYBMZRAKlKq89").then((entry: any) => setImgUrl(entry.fields.file.url))
   
   return (
+    
     <div className="App">
+      <NavBar >
+        <NavBarIcon>
+
+        </NavBarIcon>
+        <NavBarIconAnchor menuShown={false}>
+      <Close></Close>
+
+        </NavBarIconAnchor>
+      </NavBar>
+      <Button></Button>
       <header className="App-header">
         <img src={imgUrl} alt=""/>
         <p>
@@ -43,6 +55,7 @@ const App: React.FC = () => {
         </p>
       </header>
     </div>
+    
   );
 }
 
