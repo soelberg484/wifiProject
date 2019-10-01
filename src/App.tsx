@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { NavBar, NavBarIcon, NavBarIconAnchor } from '@dfds-ui/react-components'
 import { Button } from '@dfds-ui/react-components'
 import { Close } from '@dfds-ui/icons'
+import { H2 } from '@dfds-ui/react-components'
+import { ReactComponent as Wifi } from './img/wifi-svg.svg'
+import { string } from 'prop-types';
+
 const contentful = require('contentful')
 
 
@@ -14,21 +17,24 @@ var client = contentful.createClient({
 })
 
 
+
 const App: React.FC = () => {
-  const [content, setContent] = useState("")
+  const [content, setContent] = useState({title: "", connect: "", subTitle: "", terms: ""})
   const [value, setValue] = useState("") 
   const [imgUrl, setImgUrl] = useState("")
   
-  client.getEntries({
-    'content_type': 'flowTravel'
-  })
-  .then(function (entries: any) {
-      console.log(JSON.stringify(entries))
-              entries.items.forEach(function (entry: any) {
-              setContent(entry.fields.oneway)
-      })
-  })
-  
+  useEffect(() => { 
+    client.getEntries({
+      'content_type': 'wiFiPortal'
+    })
+    .then(function (entries: any) {
+        console.log(JSON.stringify(entries))
+                entries.items.forEach(function (entry: any) {
+                setContent(entry.fields)
+        })
+    })
+    
+  }, [])
 
   client.getEntry('JyYjkVCW52anktb0999no').then((entry: any) => setValue(entry.fields.value))
   client.getAsset("5qUgeLjfMgYBMZRAKlKq89").then((entry: any) => setImgUrl(entry.fields.file.url))
@@ -37,23 +43,16 @@ const App: React.FC = () => {
     
     <div className="App">
       <NavBar >
-        <NavBarIcon>
-
+        <NavBarIcon alignment="right">
+        <Close></Close>
         </NavBarIcon>
-        <NavBarIconAnchor menuShown={false}>
-      <Close></Close>
-
-        </NavBarIconAnchor>
       </NavBar>
-      <Button></Button>
-      <header className="App-header">
-        <img src={imgUrl} alt=""/>
-        <p>
-          {value}
-          <br/>
-          {content}
-        </p>
-      </header>
+      <Wifi></Wifi>
+      <H2>{content.title}</H2>
+      <p>{content.subTitle}</p>
+
+      <p>{content.terms}</p>
+      <Button variation="primary" >{content.connect}</Button>
     </div>
     
   );
